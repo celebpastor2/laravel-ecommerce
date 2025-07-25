@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
@@ -16,9 +17,26 @@ class UserController extends Controller
         $password = $request->input("password");
 
         $request->validate([
-            'username' => 'required',
-            'password' => 'required'
+            'username' => 'required|max:23|min:6|unique:users,username|regex:/[a-z]/|regex:/[A-Z]/',
+            'password' => 'required|after::username',
+            'email'     => 'email|in::table_name',
+            'mark_words'   => 'required|notin::kool,bath,poison,raise,other',
+            'photo'        => 'file|mimes:jpg,png|max:2048'
         ]);
+
+        /*
+        required - to check if a field is available in the request
+        date - if the field is formatted as a date and be read as a date
+        after - checks a particular field and verifies if that field is set before verifying the current
+        email - checks if a field is an email
+        in      - showing if a value is in a list of values,
+        notin   - showing is a value is not in a list of values
+        file    - is a way of verifying that a particular input is a file
+        mimes   - is a way of verifying the file type
+        unique  - checks a particular table in database to see if that value entering into the database is actually unique
+        confirmed - works with a password field to check if that filed has been confirmed by the user
+        regex   - 
+        */
 
         $isLogin = Auth::attempt(["email" => $username, "password" => $password]);
         
@@ -30,12 +48,14 @@ class UserController extends Controller
         }
     }
 
-    public function register(Request $request){
+    public function register(UserRequest $request){
         $username   = $request->input("username");
         $email      = $request->input("email");
         $password   = $request->input("password");
         $name       = $request->input("name");
         $isShop       = $request->input("shop");
+        $validated  = $request->validated();
+        $username   = $validated['username'];
 
         $exists = User::where("username", $username )->first();//retrieve all records that aligns with the where
 
