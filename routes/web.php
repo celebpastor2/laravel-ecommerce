@@ -36,4 +36,6 @@ Route::get('/livewire', function(){
     return view("live");
 });
 
+Route::get("/view-form", [FormController::class, 'ViewAnother'])->name("viewer");
+
 

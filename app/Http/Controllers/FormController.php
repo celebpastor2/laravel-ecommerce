@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ContactForm;
+use App\Models\Form;
 
 class FormController extends Controller
 {
+
+    public function ViewAnother(Request $request){
+        $all_forms = Form::all();
+        return view("all_form", [
+            "all_forms" => $all_forms
+        ]);
+    }
     //
     public function ContactForm(Request $request){
         $name = $request->input("name");

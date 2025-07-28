@@ -6,7 +6,7 @@
     <title>Live Preview</title>
 </head>
 <body>
-    @livewire("counter")
-    <livewire:counter />
+    
+    <livewire:input />
 </body>
 </html>
