@@ -6,7 +6,8 @@
     <title>Live Preview</title>
 </head>
 <body>
-    
+    @livewireScripts
+    @livewireStyles
     <livewire:input />
 </body>
 </html>
