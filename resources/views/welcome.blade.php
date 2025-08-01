@@ -273,5 +273,10 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+        <script>
+            Echo.channel("chat").listen('chat.room', function(data){
+                console.log("data recieved from chat channel is: ", data);
+            });
+        </script>
     </body>
 </html>

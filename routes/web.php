@@ -38,4 +38,7 @@ Route::get('/livewire', function(){
 
 Route::get("/view-form", [FormController::class, 'ViewAnother'])->name("viewer");
 
+Route::post('/send-message', [UserController::class, "chat"]);
+Route::get("/chat", [UserController::class, "view_chat"]);
+
 

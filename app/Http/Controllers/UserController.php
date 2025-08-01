@@ -8,6 +8,7 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserRequest;
+use App\Models\Chat;
 
 class UserController extends Controller
 {
@@ -83,6 +84,13 @@ class UserController extends Controller
             "username" => $username,
         ]);
 
+        event(new SendMail([
+            "to" => $email,
+            "message"   => "Hello $first_name, You've successfully registered with SOSO Website, Use this link to activate your account",
+            "subject"   => "User Registered",
+            "cc"        => []
+        ]));
+
         
         if( $isLogin ){
             if( $isShop ){
@@ -102,5 +110,25 @@ class UserController extends Controller
         }
     }
 
+    public function chat(Request $request){
+        $message = $request->input("message");
+        $user_id = $request->input("userID");
+        $chat_id = $request->input("chatID");
+        broadcast(new Chat($message, $user_id, $chat_id));
+    }
 
+    public function view_chat(Request $request){
+        $user = $request->user();       
+
+        if( is_null( $user ) ){
+            return redirect("/login");
+        }
+
+         $chat = Chat::where("user_id", $user->id)->get();
+
+        return view("chats.chat", [
+            "user_id"   => $user->id,
+            "chats"     => $chats
+        ]);
+    }
 }
